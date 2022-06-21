@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(ros_ign_image)
+project(ros_gz_image)
 
 # Default to C++17
 if(NOT CMAKE_CXX_STANDARD)
@@ -12,28 +12,28 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(image_transport REQUIRED)
-find_package(ros_ign_bridge REQUIRED)
+find_package(ros_gz_bridge REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
 # Edifice
-if("$ENV{IGNITION_VERSION}" STREQUAL "edifice")
+if("$ENV{GZ_VERSION}" STREQUAL "edifice")
   find_package(ignition-transport10 REQUIRED)
-  set(IGN_TRANSPORT_VER ${ignition-transport10_VERSION_MAJOR})
+  set(GZ_TRANSPORT_VER ${ignition-transport10_VERSION_MAJOR})
 
   find_package(ignition-msgs7 REQUIRED)
-  set(IGN_MSGS_VER ${ignition-msgs7_VERSION_MAJOR})
+  set(GZ_MSGS_VER ${ignition-msgs7_VERSION_MAJOR})
 
   set(GZ_TARGET_PREFIX ignition)
 
   message(STATUS "Compiling against Ignition Edifice")
 # Fortress
-elseif("$ENV{IGNITION_VERSION}" STREQUAL "garden")
+elseif("$ENV{GZ_VERSION}" STREQUAL "garden")
   find_package(gz-transport12 REQUIRED)
-  set(IGN_TRANSPORT_VER ${gz-transport12_VERSION_MAJOR})
+  set(GZ_TRANSPORT_VER ${gz-transport12_VERSION_MAJOR})
 
   find_package(gz-msgs9 REQUIRED)
-  set(IGN_MSGS_VER ${gz-msgs9_VERSION_MAJOR})
+  set(GZ_MSGS_VER ${gz-msgs9_VERSION_MAJOR})
 
   set(GZ_TARGET_PREFIX gz)
 
@@ -41,10 +41,10 @@ elseif("$ENV{IGNITION_VERSION}" STREQUAL "garden")
 # Default to Fortress
 else()
   find_package(ignition-transport11 REQUIRED)
-  set(IGN_TRANSPORT_VER ${ignition-transport11_VERSION_MAJOR})
+  set(GZ_TRANSPORT_VER ${ignition-transport11_VERSION_MAJOR})
 
   find_package(ignition-msgs8 REQUIRED)
-  set(IGN_MSGS_VER ${ignition-msgs8_VERSION_MAJOR})
+  set(GZ_MSGS_VER ${ignition-msgs8_VERSION_MAJOR})
 
   set(GZ_TARGET_PREFIX ignition)
 
@@ -62,13 +62,13 @@ add_executable(${executable}
 )
 
 target_link_libraries(${executable}
-  ${GZ_TARGET_PREFIX}-msgs${IGN_MSGS_VER}::core
-  ${GZ_TARGET_PREFIX}-transport${IGN_TRANSPORT_VER}::core
+  ${GZ_TARGET_PREFIX}-msgs${GZ_MSGS_VER}::core
+  ${GZ_TARGET_PREFIX}-transport${GZ_TRANSPORT_VER}::core
 )
 
 ament_target_dependencies(${executable}
   "image_transport"
-  "ros_ign_bridge"
+  "ros_gz_bridge"
   "rclcpp"
   "sensor_msgs"
 )
@@ -84,7 +84,7 @@ if(BUILD_TESTING)
   # find_package(rostest REQUIRED)
   #
   # set(test_publishers
-  #   ign_publisher
+  #   gz_publisher
   # )
   #
   # set(test_subscribers
@@ -97,8 +97,8 @@ if(BUILD_TESTING)
   #   )
   #   target_link_libraries(${test_publisher}_image
   #     ${catkin_LIBRARIES}
-  #     ${GZ_TARGET_PREFIX}-msgs${IGN_MSGS_VER}::core
-  #     ${GZ_TARGET_PREFIX}-transport${IGN_TRANSPORT_VER}::core
+  #     ${GZ_TARGET_PREFIX}-msgs${GZ_MSGS_VER}::core
+  #     ${GZ_TARGET_PREFIX}-transport${GZ_TRANSPORT_VER}::core
   #     gtest
   #     gtest_main
   #   )
@@ -110,8 +110,8 @@ if(BUILD_TESTING)
   #     test/subscribers/${test_subscriber}.cpp)
   #   target_link_libraries(test_${test_subscriber}_image
   #     ${catkin_LIBRARIES}
-  #     ${GZ_TARGET_PREFIX}-msgs${IGN_MSGS_VER}::core
-  #     ${GZ_TARGET_PREFIX}-transport${IGN_TRANSPORT_VER}::core
+  #     ${GZ_TARGET_PREFIX}-msgs${GZ_MSGS_VER}::core
+  #     ${GZ_TARGET_PREFIX}-transport${GZ_TRANSPORT_VER}::core
   #   )
   # endforeach(test_subscriber)
 endif()
